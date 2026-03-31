@@ -1,0 +1,25 @@
+{
+  "name": "fixpal-lite-refactored",
+  "version": "1.0.0",
+  "description": "FixPal Lite - Lightweight AI-powered debugging assistant",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "npm run dev:api & npm run dev:ui",
+    "dev:api": "cd backend && npm start",
+    "dev:ui": "cd frontend && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "build:api": "cd backend && npm run start",
+    "build:ui": "cd frontend && npm run build"
+  },
+  "keywords": [
+    "ai",
+    "debugging",
+    "fixpal",
+    "bug-detection"
+  ],
+  "author": "FixPal Team",
+  "license": "MIT"
+}
