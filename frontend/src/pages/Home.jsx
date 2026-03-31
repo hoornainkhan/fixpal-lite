@@ -59,6 +59,19 @@ export default function Home() {
   };
 
   const handleReset = () => {
+    // Clear all input state
+    setZipFile(null);
+    setProjectFiles([]);
+    setGithubUrl("");
+    setErrorText("");
+    setErrorImage(null);
+
+    // Clear file input refs
+    if (zipInputRef.current) zipInputRef.current.value = "";
+    if (filesInputRef.current) filesInputRef.current.value = "";
+    if (imageInputRef.current) imageInputRef.current.value = "";
+
+    // Reset mutation state
     analyzeMutation.reset();
   };
 
