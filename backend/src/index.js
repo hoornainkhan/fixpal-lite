@@ -21,8 +21,8 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 app
-  .listen(port, () => {
-    console.log(`✓ Server listening on http://localhost:${port}`);
+  .listen(port, "0.0.0.0", () => {
+    console.log(`✓ Server listening on port ${port}`);
   })
   .on("error", (err) => {
     console.error(" Server error:", err);
