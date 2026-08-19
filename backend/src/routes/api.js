@@ -70,13 +70,9 @@ router.post("/analyze", uploadFields, async (req, res) => {
     let resolvedErrorText = errorText?.trim() || "";
 
     if (!resolvedErrorText && errorImageFiles.length > 0) {
-      console.log("Extracting text from error screenshot via OCR");
       try {
         resolvedErrorText = await extractTextFromImage(
           errorImageFiles[0].buffer,
-        );
-        console.log(
-          `OCR extraction complete: ${resolvedErrorText.length} chars`,
         );
       } catch (err) {
         console.warn(`OCR failed: ${err.message}`);
@@ -98,21 +94,14 @@ router.post("/analyze", uploadFields, async (req, res) => {
       return;
     }
 
-    console.log("Parsing error message");
     const parsedError = parseError(resolvedErrorText);
-    console.log(
-      `Error parsed: ${parsedError.errorType}, file: ${parsedError.fileName}, language: ${parsedError.language}`,
-    );
 
-    console.log("Extracting project files");
     let extractedFiles = [];
 
     if (projectZipFiles.length > 0) {
       extractedFiles = await extractZip(projectZipFiles[0].buffer, tempDir);
-      console.log(`Extracted from ZIP: ${extractedFiles.length} files`);
     } else if (projectFiles.length > 0) {
       extractedFiles = await extractUploadedFiles(projectFiles);
-      console.log(`Processed uploaded files: ${extractedFiles.length} files`);
     } else if (githubUrl?.trim()) {
       const sanitizedUrl = githubUrl.trim();
       if (
@@ -125,11 +114,7 @@ router.post("/analyze", uploadFields, async (req, res) => {
         });
         return;
       }
-      console.log(`Cloning GitHub repo: ${sanitizedUrl}`);
       extractedFiles = await cloneGithubRepo(sanitizedUrl, tempDir);
-      console.log(
-        `Cloned and extracted files from GitHub: ${extractedFiles.length} files`,
-      );
     }
 
     if (extractedFiles.length === 0) {
@@ -140,7 +125,6 @@ router.post("/analyze", uploadFields, async (req, res) => {
       return;
     }
 
-    console.log(`Ranking files by relevance: ${extractedFiles.length} total`);
     const rankedFiles = rankFiles(extractedFiles, parsedError);
 
     if (rankedFiles.length === 0) {
@@ -153,14 +137,8 @@ router.post("/analyze", uploadFields, async (req, res) => {
     }
 
     const topFile = rankedFiles[0].file;
-    console.log(
-      `Top file selected: ${topFile.relativePath} (score: ${rankedFiles[0].score})`,
-    );
-
-    console.log("Extracting relevant code block");
     const extracted = extractRelevantCode(topFile, parsedError);
 
-    console.log("Calling NVIDIA AI API for analysis");
     const result = await analyzeWithNvidia(
       parsedError,
       extracted.snippet,
@@ -168,7 +146,6 @@ router.post("/analyze", uploadFields, async (req, res) => {
       extracted.startLine,
     );
 
-    console.log(`Analysis complete: ${result.identifiedFile}`);
     res.json(result);
   } catch (err) {
     console.error(`Error during analysis: ${err.message}`);

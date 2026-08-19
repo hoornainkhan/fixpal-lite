@@ -308,6 +308,33 @@ cd backend && npm install && npm start
 
 The backend automatically loads `.env` on startup.
 
+### Analysis Hangs / "Loading Too Long" then Fails
+
+The backend talks to the NVIDIA API at `https://integrate.api.nvidia.com/v1/chat/completions`.
+
+**Most common cause: the AI model is not available for your API key.**
+
+NVIDIA's proxy **accepts the connection but never responds** when a model is not
+provisioned on your account (e.g. `meta/llama-3.3-70b-instruct`). There is no error
+back — the request just hangs until the timeout fires, which looks like an endless
+spinner followed by "Analysis failed".
+
+**Fix:**
+
+1. Open https://build.nvidia.com and confirm the model you want is listed for your account.
+2. Set the model explicitly in `backend/.env`:
+   ```env
+   NVIDIA_MODEL=meta/llama-3.1-70b-instruct
+   ```
+   Models confirmed working with the default free key: `meta/llama-3.1-70b-instruct`
+   and `meta/llama-3.1-8b-instruct`.
+3. Restart the backend.
+
+The request timeout is configurable too (default 150s):
+   ```env
+   NVIDIA_TIMEOUT_MS=150000
+   ```
+
 ### Frontend Can't Connect to Backend
 
 **Check these:**

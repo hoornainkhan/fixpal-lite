@@ -3,6 +3,7 @@ dist/
 build/
 .env
 .env.local
+.env*
 .DS_Store
 *.log
 npm-debug.log*
@@ -13,3 +14,6 @@ yarn-error.log*
 out/
 .cache/
 coverage/
+backend/eng.traineddata
+backendFixpal.md
+REFACTORING_PLAN.md
