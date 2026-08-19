@@ -1,241 +1,327 @@
-# FixPal Lite
-
 <div align="center">
 
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green?style=flat-square&logo=node.js)](https://nodejs.org)
-[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
-[![npm](https://img.shields.io/badge/npm-10+-blue?style=flat-square&logo=npm)](https://www.npmjs.com)
+# FixPal Lite
 
-**AI-powered debugging assistant that identifies bugs and generates fixes in seconds**
+### AI-Powered Debugging Assistant
 
-[Features](#-features) • [Quick Start](#-quick-start) • [API Docs](#-api-endpoints) • [Contributing](#-contributing)
+Analyze project code, identify likely root causes, and generate focused code fixes with AI-assisted analysis.
+
+<br />
+
+[![React](https://img.shields.io/badge/React-2026-blue?logo=react&logoColor=white)](https://react.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express.js-black?logo=express&logoColor=white)](https://expressjs.com/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![NVIDIA](https://img.shields.io/badge/NVIDIA%20API-76B900?logo=nvidia&logoColor=white)](https://developer.nvidia.com/)
+
+<br />
+
+[Live Demo](#) · [Features](#features) · [Architecture](#architecture) · [Getting Started](#getting-started)
 
 </div>
 
 ---
 
-## 🚀 Overview
+## Overview
 
-FixPal is an AI-powered debugging assistant that identifies bugs and generates fixes in seconds. Upload your code, paste an error (text or screenshot), and get instant AI-powered analysis using NVIDIA's LLM API.
+**FixPal Lite** is an AI-powered debugging assistant designed to help developers move from an error message to a focused explanation and code fix.
 
-**Perfect for:** developers who want fast, reliable debugging without the overhead.
+Instead of sending an entire project to an LLM, FixPal Lite processes the project, identifies files relevant to the reported error, extracts the surrounding code context, and sends only the focused context for AI analysis.
 
----
+The generated analysis includes:
 
-## ✨ Features
-
-- 🎯 **Multi-Language Error Parsing** - Detects and analyzes bugs across JavaScript, Python, Java, C++, and more
-- 📸 **OCR Text Extraction** - Convert error screenshots to searchable text with Tesseract OCR
-- 🧠 **AI-Powered Analysis** - Uses NVIDIA LLM API to identify root causes and generate fixes
-- 📦 **Flexible Input** - Upload ZIP files, individual files, or clone directly from GitHub
-- 🎨 **Side-by-Side Code Comparison** - Visualize buggy code vs. fixed code with syntax highlighting
-- 📊 **Smart File Ranking** - Intelligently identifies the most relevant files based on error context
-- 🎯 **Context Extraction** - Automatically pulls ±20 lines around the error for better analysis
-- 💨 **Lightweight** - Full feature-set in ~20 dependencies (vs 100+ in original)
-- 🚀 **Fast Setup** - Get running in under 2 minutes with zero configuration
+- Suspected file
+- Root cause
+- Problematic code
+- Suggested fix
+- Explanation
+- Confidence level
 
 ---
 
-## 📋 Requirements
+## Features
 
-- **Node.js 18+** ([Download](https://nodejs.org/))
-- **npm** 10+ (comes with Node)
-- **NVIDIA API Key** ([Get one free](https://www.nvidia.com/en-us/ai/)) - for LLM bug analysis
-
-> **Don't have Node.js?** The installer automatically includes npm 10+
-
----
-
-## 🏃 Quick Start
-
-### 1. Clone & Install (< 2 minutes)
-
-```bash
-git clone https://github.com/yourusername/fixpal-lite.git
-cd fixpal-lite
-npm run install:all
-```
-
-### 2. Configure Environment
-
-Create a `.env` file in the root directory:
-
-```env
-NVIDIA_API_KEY=nvapi-your-key-here
-PORT=8080
-```
-
-[Get your free NVIDIA API key →](https://www.nvidia.com/en-us/ai/)
-
-### 3. Start the App
-
-```bash
-npm run dev
-```
-
-Open **http://localhost:5173** in your browser.
-
-Backend automatically runs on http://localhost:8080
+| Feature | Description |
+| --- | --- |
+| **Multi-language Error Parsing** | Extracts useful information from errors across JavaScript, Python, Java, C++, and other common languages. |
+| **Screenshot OCR** | Extracts error text from screenshots using Tesseract.js. |
+| **Flexible Project Input** | Accepts ZIP archives, individual project files, or public GitHub repositories. |
+| **Smart File Ranking** | Ranks project files according to their relevance to the reported error. |
+| **Context Extraction** | Extracts focused code surrounding the suspected issue instead of sending the entire project to the LLM. |
+| **AI-Assisted Debugging** | Uses the NVIDIA API to analyze the relevant error and code context. |
+| **Buggy vs. Fixed Code** | Displays the problematic code alongside the proposed correction. |
+| **Confidence Scoring** | Provides a confidence level for the generated analysis. |
 
 ---
 
-## 🔧 Running Locally
+## How It Works
 
-### Option 1: Run Both Simultaneously (Recommended)
+```text
+Project Source + Error
+          │
+          ▼
+   Project Processing
+          │
+          ├── ZIP Extraction
+          ├── File Collection
+          └── GitHub Repository Cloning
+          │
+          ▼
+      Error Parsing
+          │
+          ▼
+    Smart File Ranking
+          │
+          ▼
+    Context Extraction
+          │
+          ▼
+      NVIDIA LLM
+          │
+          ▼
+   Structured Analysis
+          │
+          ▼
+ Root Cause + Code Fix
 
-```bash
-npm run dev
-```
+ Analysis Pipeline
+1. Project Input
 
-This starts:
+Provide one of the following:
 
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8080
+ZIP archive
+Individual project files
+Public GitHub repository
+2. Error Input
 
-### Option 2: Run Separately (Advanced Development)
+Provide either:
 
-**Terminal 1 - Backend:**
+Error message or stack trace
+Screenshot of the error
 
-```bash
-cd backend
-npm install
-npm start
-```
+Screenshots are processed using OCR.
 
-Backend runs on **http://localhost:8080**
+3. Error Parsing
 
-**Terminal 2 - Frontend:**
+FixPal Lite extracts useful information such as:
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+Error type
+Programming language
+File name
+Line number, when available
+4. Smart File Ranking
 
-Frontend runs on **http://localhost:5173** and automatically proxies `/api` calls to the backend.
+Project files are ranked according to their relationship to the reported error.
 
----
+5. Context Extraction
 
-## Project Structure
+Instead of sending the entire project to the model, FixPal Lite extracts the relevant section of the highest-ranked file.
 
-```
-refactored-project/
-├── backend/                    # Express API server
+This keeps the AI context focused and reduces unnecessary token usage.
+
+6. AI Analysis
+
+The focused error and relevant code context are sent to the NVIDIA-hosted LLM for analysis.
+
+7. Result Generation
+
+The final analysis contains:
+
+Identified file
+Line number
+Root cause
+Buggy code
+Fixed code
+Explanation
+Confidence level
+Architecture
+Local Development
+┌─────────────────┐
+│   React / Vite  │
+└────────┬────────┘
+         │
+         │ /api proxy
+         ▼
+┌─────────────────┐
+│ Express Backend │
+├─────────────────┤
+│ File Processing │
+│ OCR             │
+│ Error Parsing   │
+│ Smart Scanner   │
+│ Code Extraction │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   NVIDIA API    │
+└─────────────────┘
+Production
+┌──────────────┐
+│    Vercel    │
+│   Frontend   │
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│    Render    │
+│   Backend    │
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│ NVIDIA API   │
+│     LLM      │
+└──────────────┘
+
+The frontend uses VITE_API_URL to determine the backend origin in production, while the Vite development proxy handles local API requests.
+
+Tech Stack
+Frontend
+React
+Vite
+Tailwind CSS
+React Syntax Highlighter
+Backend
+Node.js
+Express
+Multer
+Sharp
+Tesseract.js
+Adm-Zip
+Simple-Git
+dotenv
+AI
+NVIDIA API
+NVIDIA-hosted LLM
+Infrastructure
+Docker
+Vercel
+Render
+Project Structure
+fixpal-lite/
+│
+├── backend/
+│   ├── Dockerfile
 │   ├── package.json
 │   └── src/
-│       ├── index.js           # Entry point
-│       ├── app.js             # Express setup
+│       ├── app.js
+│       ├── index.js
 │       ├── routes/
-│       │   └── api.js         # POST /api/debug/analyze
+│       │   └── api.js
 │       └── services/
-│           ├── fileHandler.js      # ZIP/file extraction
-│           ├── ocrService.js       # Tesseract OCR
-│           ├── errorParser.js      # Multi-language parsing
-│           ├── smartScanner.js     # File ranking
-│           ├── codeExtractor.js    # Code extraction
-│           └── nvidiaService.js    # LLM integration
+│           ├── codeExtractor.js
+│           ├── errorParser.js
+│           ├── fileHandler.js
+│           ├── nvidiaService.js
+│           ├── ocrService.js
+│           └── smartScanner.js
 │
-├── frontend/                   # React + Vite app
+├── frontend/
 │   ├── package.json
 │   ├── vite.config.js
-│   ├── index.html
 │   └── src/
-│       ├── main.jsx            # Entry
-│       ├── App.jsx             # Route/layout
-│       ├── index.css           # Tailwind + global styles
-│       ├── pages/
-│       │   ├── Home.jsx        # Main page
-│       │   └── NotFound.jsx
 │       ├── components/
-│       │   ├── CodeBlock.jsx       # Syntax highlighter
-│       │   └── ProcessingOverlay.jsx # Progress UI
 │       ├── hooks/
-│       │   ├── useAnalyze.js   # API mutation
-│       │   └── useToast.js     # Notifications
-│       └── lib/
-│           └── utils.js        # cn() helper
-```
+│       ├── lib/
+│       └── pages/
+│
+├── .env.example
+├── package.json
+└── README.md
+Getting Started
+Requirements
+Node.js 18+
+npm 10+
+Git
+Docker (optional)
+NVIDIA API key
+1. Clone the Repository
+git clone https://github.com/hoornainkhan/fixpal-lite.git
+cd fixpal-lite
+2. Install Dependencies
+npm run install:all
+3. Configure the Backend
 
----
+Create:
 
-## 🎯 How It Works
+backend/.env
 
-```
-1. User Input
-   ├── Upload ZIP file / individual files / GitHub URL
-   └── Provide error (text or screenshot)
-         ↓
-2. Backend Processing
-   ├── Extract project files
-   ├── OCR screenshot (if needed) → text
-   ├── Parse error message (language, line number, filename)
-   ├── Rank files by relevance
-   ├── Extract code context (±20 lines)
-   └── Send to NVIDIA LLM API
-         ↓
-3. Analysis Results
-   ├── Identified problematic file
-   ├── Root cause explanation
-   ├── Side-by-side code comparison
-   └── Technical explanation of fix
-         ↓
-4. Display Results
-   └── Syntax-highlighted code with copy buttons
-```
+Add:
 
-### Detailed Workflow
+NVIDIA_API_KEY=nvapi-your-key
+NVIDIA_MODEL=meta/llama-3.1-8b-instruct
+NVIDIA_TIMEOUT_MS=150000
+PORT=8080
 
-1. **Upload** - User provides project code and error message/screenshot
-2. **Extract** - Files extracted from ZIP, or cloned from GitHub
-3. **Analyze** - Error parsed for context; files ranked by relevance
-4. **Context** - Relevant code extracted with surrounding lines
-5. **Fix** - NVIDIA LLM generates buggy → fixed code transformation
-6. **Display** - Results shown with syntax highlighting and explanations
+Keep NVIDIA_API_KEY on the backend. Never expose it through a VITE_* environment variable.
 
----
+4. Configure the Frontend
 
-## 📚 API Endpoints
+For local development, create:
 
-### Health Check
+frontend/.env.local
 
-Verify the backend is running:
+Add:
 
-```http
+VITE_API_URL=http://localhost:8080
+
+Alternatively, the Vite development proxy can handle /api requests.
+
+5. Start the Application
+
+From the repository root:
+
+npm run dev
+
+The application will be available at:
+
+Frontend: http://localhost:5173
+Backend:  http://localhost:8080
+Environment Configuration
+Frontend
+
+The frontend reads the backend URL from:
+
+VITE_API_URL
+Local Development
+VITE_API_URL=http://localhost:8080
+Production
+
+Configure the variable in your Vercel project:
+
+VITE_API_URL=<your-backend-service-url>
+
+Vite embeds VITE_* variables during the build process, so the frontend must be rebuilt after changing the value.
+
+Never place secrets such as NVIDIA_API_KEY in frontend environment variables.
+
+API
+Health Checks
 GET /api/health
-```
+GET /api/debug/health
 
-**Response:**
+Successful response:
 
-```json
-{ "status": "ok" }
-```
-
----
-
-### Analyze Error
-
-The main endpoint for debugging:
-
-```http
+{
+  "status": "ok"
+}
+Analyze Project
 POST /api/debug/analyze
 Content-Type: multipart/form-data
-```
 
-**Request Parameters:**
+The request must include at least one project source and one error source.
 
-| Parameter      | Type   | Required | Description                       |
-| -------------- | ------ | -------- | --------------------------------- |
-| `projectZip`   | File   | ⚠️ \*    | ZIP file containing project code  |
-| `projectFiles` | File[] | ⚠️ \*    | Individual project files (max 50) |
-| `githubUrl`    | string | ⚠️ \*    | GitHub repository URL to clone    |
-| `errorText`    | string | ⚠️ \*    | Error message (text)              |
-| `errorImage`   | File   | ⚠️ \*    | Error screenshot (will OCR)       |
+Field	Type	Description
+projectZip	File	ZIP archive containing the project
+projectFiles	File[]	Individual project files
+githubUrl	String	Public GitHub repository URL
+errorText	String	Error message or stack trace
+errorImage	File	Screenshot processed with OCR
 
-_\* At least one from each group is required_
+Example response:
 
-**Response:**
-
-```json
 {
   "identifiedFile": "src/app.js",
   "lineNumber": 45,
@@ -244,266 +330,158 @@ _\* At least one from each group is required_
   "confidence": "high",
   "buggyCode": "const obj = JSON.parse(response);",
   "fixedCode": "const obj = JSON.parse(response || '{}');",
-  "explanation": "Response may be undefined, causing JSON.parse() to fail. Adding a fallback prevents the error."
+  "explanation": "Response may be undefined, causing JSON.parse() to fail."
 }
-```
+NVIDIA Configuration
 
----
+FixPal Lite sends analysis requests to the NVIDIA API.
 
-## ⚙️ Environment Configuration
+The configured model is specified through:
 
-### Backend Settings
+NVIDIA_MODEL=<model-provisioned-for-your-account>
 
-Create a `.env` file in the root directory:
+The selected model must be available to the NVIDIA API key being used.
 
-```env
-NVIDIA_API_KEY=nvapi-your-key-here  # Required for LLM analysis
-PORT=8080                             # Optional (default: 8080)
-```
+If an unavailable model is configured, the request may remain pending until the configured timeout is reached.
 
-The `.env` file is **automatically loaded** on startup via `dotenv`.
+Before deploying, verify the model availability through NVIDIA Build.
 
-> ⚠️ **Important:** `.env` is in `.gitignore` and won't be committed to version control for security.
+Error Handling
 
-### Frontend Settings
+The backend distinguishes common NVIDIA API failures, including:
 
-The frontend uses Vite environment variables. Proxy is **auto-configured** in `vite.config.js`:
+Authentication failures
+Model availability issues
+Rate limits
+Network errors
+Request timeouts
 
-```js
-proxy: {
-  '/api': {
-    target: 'http://localhost:8080',
-  },
-}
-```
+Sensitive values such as API keys and uploaded project contents are not logged.
 
-This automatically forwards all `/api/*` requests to the backend.
+Docker
 
----
+The backend includes a Dockerfile for containerized deployment.
 
-## 🆘 Troubleshooting
+Build
 
-### Backend Won't Start
+From the repository root:
 
-```bash
-# Clear node_modules cache and reinstall
-rm -r backend/node_modules
-cd backend && npm install && npm start
-```
+docker build -t fixpal-api ./backend
+Run
+docker run --rm \
+  --env-file backend/.env \
+  -e PORT=10000 \
+  -p 8080:10000 \
+  fixpal-api
 
-**Common causes:**
+Verify the backend:
 
-- Missing dependencies
-- Port 8080 already in use
-- Node version < 18
+http://localhost:8080/api/health
+Deployment
 
-### API Returns 500 - "NVIDIA_API_KEY not set"
+FixPal Lite uses a split deployment architecture:
 
-**Check these:**
+Frontend  → Vercel
+Backend   → Render
+AI        → NVIDIA API
+Frontend
 
-1. ✅ `.env` file exists in **root directory** (not in backend/)
-2. ✅ Contains: `NVIDIA_API_KEY=nvapi-xxxxxxxxxxxx`
-3. ✅ Value is your actual NVIDIA API key (not placeholder)
-4. ✅ Backend restarted after adding `.env`
+The Vite frontend is deployed to Vercel.
 
-The backend automatically loads `.env` on startup.
+Setting	Value
+Root Directory	frontend
+Install Command	npm ci
+Build Command	npm run build
+Output Directory	dist
+VITE_API_URL	Backend service URL
+Backend
 
-### Analysis Hangs / "Loading Too Long" then Fails
+The Express backend is containerized and deployed as a persistent service.
 
-The backend talks to the NVIDIA API at `https://integrate.api.nvidia.com/v1/chat/completions`.
+Required environment variables:
 
-**Most common cause: the AI model is not available for your API key.**
+NVIDIA_API_KEY=...
+NVIDIA_MODEL=...
+NVIDIA_TIMEOUT_MS=150000
 
-NVIDIA's proxy **accepts the connection but never responds** when a model is not
-provisioned on your account (e.g. `meta/llama-3.3-70b-instruct`). There is no error
-back — the request just hangs until the timeout fires, which looks like an endless
-spinner followed by "Analysis failed".
+The backend reads the PORT value supplied by the hosting platform.
 
-**Fix:**
+Troubleshooting
+Frontend Cannot Reach the Backend
 
-1. Open https://build.nvidia.com and confirm the model you want is listed for your account.
-2. Set the model explicitly in `backend/.env`:
-   ```env
-   NVIDIA_MODEL=meta/llama-3.1-70b-instruct
-   ```
-   Models confirmed working with the default free key: `meta/llama-3.1-70b-instruct`
-   and `meta/llama-3.1-8b-instruct`.
-3. Restart the backend.
+Check that:
 
-The request timeout is configurable too (default 150s):
-   ```env
-   NVIDIA_TIMEOUT_MS=150000
-   ```
+The local backend is running on port 8080.
+The Vite development proxy is configured correctly.
+Production has VITE_API_URL configured.
+The frontend was rebuilt after changing VITE_API_URL.
+Backend CORS allows the frontend origin.
+NVIDIA Requests Time Out
 
-### Frontend Can't Connect to Backend
+Check that:
 
-**Check these:**
+NVIDIA_MODEL is provisioned for the current account.
+NVIDIA_API_KEY is available to the running backend.
+The backend can reach the NVIDIA API.
+The account has not reached its rate limit.
+Local, Docker, and production environments use the intended model and key.
 
-1. ✅ Backend running on `http://localhost:8080`
-2. ✅ CORS enabled in `backend/src/app.js` (it is by default)
-3. ✅ Vite proxy configured in `frontend/vite.config.js` (it is by default)
+Do not increase the timeout as the first troubleshooting step.
 
-### OCR Not Detecting Text in Screenshot
+OCR Does Not Detect Text
 
-- Image must be clear and high-resolution (≥ 400x300px)
-- Works best with printed/terminal text (not handwriting)
-- If OCR fails, paste the error message as text instead
+Use a clear, high-resolution screenshot containing printed or terminal text.
 
-## Dependency Comparison
-
-### Original (TypeScript Monorepo)
-
-- 100+ npm packages
-- TypeScript compilation overhead
-- Replit-specific plugins
-- Multiple build configs (esbuild, Vite)
-- Radix UI + 30 component packages
-
-### Refactored (Lightweight)
-
-```
-
-Backend:
-
-- express (5)
-- cors (2.8.5)
-- multer (2.1.1)
-- sharp (0.34.1) [image processing]
-- tesseract.js (7.0.0) [OCR]
-- adm-zip (0.5.16) [ZIP extraction]
-- simple-git (3.25.0) [GitHub cloning]
-
-Frontend:
-
-- react (18.3.1)
-- react-dom (18.3.1)
-- react-syntax-highlighter (15.5.0) [code display]
-- tailwindcss (3.4.3) [styling]
-- vite (5.0.8) [bundler]
-
-Total: ~20 production packages (vs 100+)
-
-```
-
----
-
-## Performance Metrics
-
-| Metric            | Original | Refactored | Improvement    |
-| ----------------- | -------- | ---------- | -------------- |
-| Setup time        | 8-10 min | < 2 min    | 4-5x faster ⚡ |
-| node_modules size | ~600MB   | ~400MB     | 33% smaller    |
-| Dependencies      | 100+     | 20         | 80% reduction  |
-| Build time        | 15-20s   | 3-5s       | 3-4x faster    |
-| Docker image size | ~1.2GB   | ~700MB     | 42% smaller    |
-
----
-
-## 🛠️ Development & Contributing
-
-### Project Architecture
-
-```
-Backend (Express.js)
-├── Services - Business logic (error parsing, file ranking, LLM integration)
-├── Routes - HTTP endpoints
-└── Middleware - CORS, multipart handling
-
-Frontend (React + Vite)
-├── Pages - Route views
-├── Components - Reusable UI elements
-├── Hooks - State management & API calls
-└── Styles - Tailwind CSS
-```
-
-### Backend Services
-
-Edit services in `backend/src/services/`:
-
-- **`errorParser.js`** - Language detection & error message parsing
-- **`smartScanner.js`** - File ranking algorithm based on relevance
-- **`codeExtractor.js`** - Extract code context around errors
-- **`nvidiaService.js`** - Format prompts & call NVIDIA LLM API
-- **`ocrService.js`** - Tesseract OCR for screenshot text extraction
-- **`fileHandler.js`** - ZIP extraction, file handling
-
-### Frontend Components
-
-Edit in `frontend/src/`:
-
-- **`components/`** - CodeBlock (syntax highlighting), ProcessingOverlay (progress)
-- **`pages/`** - Home (main), NotFound (404)
-- **`hooks/`** - useAnalyze (API calls), useToast (notifications)
-- **`lib/`** - Utility functions
-
-### Adding Features
-
-Both backend and frontend follow clean separation of concerns:
-
-```javascript
-// Backend pattern
-Services → handle business logic
-Routes → handle HTTP layer
-Middleware → handle cross-cutting concerns
-
-// Frontend pattern
-Hooks → fetch and manage data
-Components → render UI
-Pages → compose page layouts
-```
-
----
-
-## 📄 License
-
-MIT License - See [LICENSE](LICENSE) file for details.
-
-You are free to use this project for personal and commercial purposes.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Here's how:
-
-1. **Fork** the repository
-2. **Create a branch** (`git checkout -b feature/amazing-feature`)
-3. **Make your changes** and test thoroughly
-4. **Commit** with clear messages (`git commit -m 'Add amazing feature'`)
-5. **Push** to your branch (`git push origin feature/amazing-feature`)
-6. **Open a Pull Request** describing your changes
-
-### Contribution Guidelines
-
-- Keep changes focused and minimal
-- Add tests for new functionality
-- Update README if adding new features
-- Follow existing code style
-- Ensure backend and frontend both start without errors
-
----
-
-## 📞 Support & Feedback
-
-- **Issues:** Report bugs on [GitHub Issues](https://github.com/yourusername/fixpal-lite/issues)
-- **Questions:** Start a [GitHub Discussion](https://github.com/yourusername/fixpal-lite/discussions)
-- **Feature Requests:** Open a [GitHub Issue](https://github.com/yourusername/fixpal-lite/issues) with `[FEATURE]` prefix
-
----
-
-## 📚 Additional Resources
-
-- [NVIDIA API Documentation](https://www.nvidia.com/en-us/ai/)
-- [Express.js Docs](https://expressjs.com/)
-- [React Documentation](https://react.dev/)
-- [Vite Guide](https://vitejs.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tesseract.js OCR](https://tesseract.projectnaptha.com/)
-
----
-
-## Credits
-
-Refactored from the original FixPal Lite monorepo. All core functionality preserved with a simplified, lightweight architecture.
-
-**Built with:** Express.js, React, Vite, Tailwind CSS, Tesseract OCR, NVIDIA LLM API
+When possible, provide the error as text because it is faster and generally more reliable than OCR.
+
+Backend Does Not Start
+
+Verify:
+
+Node.js 18+
+Dependencies are installed
+The configured port is available
+NVIDIA_API_KEY is present
+Docker/container configuration exposes the expected port
+
+Use the health endpoints to verify that the Express server has started independently of the NVIDIA API.
+
+Development Commands
+Command	Purpose
+npm run dev	Start frontend and backend locally
+npm run install:all	Install all project dependencies
+npm run build:ui	Build the production frontend
+cd backend && npm start	Start the backend
+cd frontend && npm run dev	Start the frontend
+cd frontend && npm run build	Build the frontend
+cd frontend && npm run preview	Preview the production frontend
+docker build -t fixpal-api ./backend	Build the backend Docker image
+Contributing
+
+Contributions are welcome.
+
+Create a feature branch.
+Keep changes focused.
+Preserve the existing backend API contract.
+Test frontend and backend changes independently.
+Verify the production frontend build.
+Open a pull request with a clear description.
+License
+
+This project is distributed under the MIT License.
+
+See LICENSE for details.
+
+Resources
+NVIDIA NIM Documentation
+Express Documentation
+React Documentation
+Vite Documentation
+Tailwind CSS Documentation
+Tesseract.js Documentation
+<div align="center">
+FixPal Lite
+
+AI-assisted debugging for faster root-cause analysis.
+
+</div> ```
